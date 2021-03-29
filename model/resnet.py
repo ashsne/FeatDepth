@@ -145,12 +145,34 @@ class ResNet(nn.Module):
         return x
 
 
+def resnet18(pretrained_path=None, **kwargs):
+    model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
+    if pretrained_path is not None:
+        model.load_state_dict(torch.load(os.path.join(pretrained_path, 'resnet50.pth')))
+        print('Loaded pre-trained weights')
+
+
+def resnet34(pretrained_path=None, **kwargs):
+    model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
+    if pretrained_path is not None:
+        model.load_state_dict(torch.load(os.path.join(pretrained_path, 'resnet50.pth')))
+        print('Loaded pre-trained weights')
+
+
 def resnet50(pretrained_path=None, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained_path is not None:
         model.load_state_dict(torch.load(os.path.join(pretrained_path, 'resnet50.pth')))
         print('Loaded pre-trained weights')
     return model
+
+
+def resnet101(pretrained_path=None, **kwargs):
+    model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
+    if pretrained_path is not None:
+        model.load_state_dict(torch.load(os.path.join(pretrained_path, 'resnet50.pth')))
+        print('Loaded pre-trained weights')
+
 
 if __name__ == '__main__':
     input_size = (3, 64, 64)
