@@ -8,12 +8,10 @@ from resnet import resnet18, resnet34, resnet50, resnet101
 from torchsummary import summary
 from torch.autograd import Variable
 
-class FeatEncoder(nn.Module):
+class DepthEncoder(nn.Module):
     '''
-    This encoded is used for features as well as for depthnet
-    ResNet-50 [18] with fully-connected layer removed is used as the encoder,
-    where deepest feature map goes through 5 downsampling stages and reduces to
-    1/32 resolution of input image
+    DepthNet also adopts an encoder-decoder structure, where ResNet-50 without
+    fully-connected layer is used as encoder and multi-scale feature maps are outputted.
     '''
     def __init__(self, num_layers, pretrained_path=None):
         super().__init__()
@@ -40,6 +38,11 @@ class FeatEncoder(nn.Module):
         # Multiple encoded features are recorded which will be used for 
         # creating depth maps
         encodes = []
+        
+        # Denormalise the input image
+        x = (x - 0.45) / 0.225
+        
+        # Compute feature maps at different stages
         x = self.encoder.conv1(x)
         x = self.encoder.bn1(x)
         x = self.encoder.relu(x)
@@ -66,7 +69,7 @@ if __name__ == '__main__':
 
     input_size = (3, 64, 64)
     device = torch.device("cpu")
-    model = FeatEncoder(50)
+    model = DepthEncoder(50)
     image = np.random.rand(1, 3, 64, 64)
     image = torch.from_numpy(image)
     print(model.forward(image.float()))
