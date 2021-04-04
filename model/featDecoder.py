@@ -9,7 +9,7 @@ import torch.nn.functional as F
 
 from resnet import resnet18, resnet34, resnet50, resnet101
 from featEncoder import FeatEncoder
-from layers import conv3x3
+from layers import conv3x3, upsample
 
 
 class UpConv(nn.Module):
@@ -21,7 +21,7 @@ class UpConv(nn.Module):
     def forward(self, x):
         x = self.conv(x)
         x = self.nonlin(x)
-        x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
+        x = upsample(x)
         return x
 
 

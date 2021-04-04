@@ -2,6 +2,10 @@ import torch.nn as nn
 import torch
 import numpy as np
 
+def upsample(x):
+    x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
+    return x
+
 def conv3x3(inplanes, out_planes, stride=1):
     # 3x3 convolution with padding
     return nn.Conv2d(inplanes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False)
